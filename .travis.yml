@@ -1,0 +1,35 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t joelnguyen/docker-next -f ./next-docker/Dockerfile.dev ./next-docker
+
+script:
+  - docker run joelnguyen/docker-next
+
+after_success:
+  - docker build -t joelnguyen/multi-client ./next-docker
+  - docker build -t joelnguyen/multi-nginx ./nginx
+  - docker build -t joelnguyen/multi-server ./server
+  - docker build -t joelnguyen/multi-worker ./worker
+# LOGIN TO DOCKER CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+# PUSH TO DOCKER HUB
+  - docker push joelnguyen/multi-client
+  - docker push joelnguyen/multi-nginx
+  - docker push joelnguyen/multi-server
+  - docker push joelnguyen/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: $ACCESS_KEY_ID
+  secret_access_key:
+    secure: "$SECRET_KEY_ID"
+  region: "us-east-1"
+  app: "docker"
+  env: "Docker-env"
+  bucket_name: "elasticbeanstalk-us-east-1-371454338591"
+  bucket_path: "docker"
+  on:
+    branch: master
