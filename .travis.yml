@@ -28,7 +28,7 @@ deploy:
     secure: "$SECRET_KEY_ID"
   region: "us-east-1"
   app: "docker"
-  env: "Docker-env"
+  env: "Docker-env-multi"
   bucket_name: "elasticbeanstalk-us-east-1-371454338591"
   bucket_path: "docker-multi"
   on:
