@@ -30,6 +30,6 @@ deploy:
   app: docker
   env: Docker-env-multi
   bucket_name: elasticbeanstalk-us-east-1-371454338591
-  bucket_path:  docker-multi-2
+  bucket_path: docker
   on:
     branch: master
